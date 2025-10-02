@@ -75,3 +75,5 @@ export const getEmployeesByBranch = (req: Request, res: Response): void => {
         res.status(500).json({ message: "Error retrieving employees by branch" });
     }
 };
+
+
