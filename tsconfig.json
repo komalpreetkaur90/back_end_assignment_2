@@ -19,3 +19,5 @@
     "include": ["src/**/*", "tests/**/*"], // Include all TypeScript files in the 'src' and 'tests' directories.
     "exclude": ["node_modules", "dist"] // Exclude 'node_modules' and 'dist' directories.
 }
+
+
