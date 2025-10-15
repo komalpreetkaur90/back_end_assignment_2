@@ -6,8 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn src/app.ts",
+    "start": "node dist/app.ts",
     "test": "jest"
   },
   "repository": {
