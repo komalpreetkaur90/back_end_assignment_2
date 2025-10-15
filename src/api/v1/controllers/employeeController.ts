@@ -1,94 +1,87 @@
 import { Request, Response } from "express";
 import * as employeeService from "../services/employeeService";
+import { SuccessResponse, ErrorResponse } from "../models/responseModel";
+import { Employee } from "../models/employee";
 
-export const getAllEmployees = (req: Request, res: Response): void => {
-    const employees = employeeService.getAllEmployees();
-    res.status(200).json({ message: "Get all employees", data: employees });
+export const getAllEmployees = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const employees = await employeeService.getAllEmployees();
+    const response: SuccessResponse<Employee[]> = {
+      message: "Get all employees",
+      data: employees,
+    };
+    res.status(200).json(response);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message } as ErrorResponse);
+  }
 };
 
-export const getEmployeeById = (req: Request, res: Response): void => {
-    const id = Number(req.params.id);
-    const employee = employeeService.getEmployeeById(id);
-    
-    if (employee) {
-        res.status(200).json({ message: "Employee found", data: employee });
-    } else {
-        res.status(404).json({ message: "Employee not found" });
+export const getEmployeeById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const employee = await employeeService.getEmployeeById(id);
+
+    if (!employee) {
+      res.status(404).json({ message: "Employee not found" } as ErrorResponse);
+      return;
     }
+
+    const response: SuccessResponse<Employee> = {
+      message: "Employee found",
+      data: employee,
+    };
+    res.status(200).json(response);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message } as ErrorResponse);
+  }
 };
 
-export const createEmployee = (req: Request, res: Response): void => {
-    try {
-        const newEmployee = req.body;
-    
-    if (!newEmployee.name || !newEmployee.position || !newEmployee.department || !newEmployee.email || !newEmployee.phone || !newEmployee.branchId) {
-            res.status(400).json({ message: "All fields are required: name, position, department, email, phone, branchId" });
-            return;
-        }
-        
-    
-    const createdEmployee = employeeService.createEmployee(newEmployee);
-        res.status(201).json({ message: "Employee created", data: createdEmployee });
-    } catch (error) {
-        console.error("Error creating employee:", error);
-        res.status(500).json({ message: "Error creating employee" });
+export const createEmployee = async (req: Request, res: Response) => {
+  try {
+    const employeeData = JSON.parse(JSON.stringify(req.body));
+
+    const newEmployee = await employeeService.createEmployee(employeeData);
+    res.status(201).json({
+      message: "Employee created successfully",
+      data: newEmployee,
+    });
+  } catch (err: any) {
+    console.error("Error in createEmployee controller:", err);
+    res.status(500).json({ message: err.message || "Internal Server Error" });
+  }
+};
+
+
+export const updateEmployee = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const existing = await employeeService.getEmployeeById(id);
+    if (!existing) {
+      res.status(404).json({ message: "Employee not found" } as ErrorResponse);
+      return;
     }
+
+    await employeeService.updateEmployee(id, req.body);
+    const response: SuccessResponse<null> = {
+      message: "Employee updated",
+      data: null,
+    };
+    res.status(200).json(response);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message } as ErrorResponse);
+  }
 };
 
-export const updateEmployee = (req: Request, res: Response): void => {
-    try {
-        const id = Number(req.params.id);
-        const updatedEmployee = req.body;
-        const result = employeeService.updateEmployee(id, updatedEmployee);
-        
-        if (result) {
-            res.status(200).json({ message: "Employee updated", data: result });
-        } else {
-            res.status(404).json({ message: "Employee not found" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating employee" });
-    }
+export const deleteEmployee = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    await employeeService.deleteEmployee(id);
+    const response: SuccessResponse<null> = {
+      message: "Employee deleted",
+      data: null,
+    };
+    res.status(200).json(response);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message } as ErrorResponse);
+  }
 };
-
-export const deleteEmployee = (req: Request, res: Response): void => {
-    try {
-        const id = Number(req.params.id);
-        const result = employeeService.deleteEmployee(id);
-        
-        if (result) {
-            res.status(200).json({ message: "Employee deleted" });
-        } else {
-            res.status(404).json({ message: "Employee not found" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting employee" });
-    }
-};
-
-export const getEmployeesByBranch = (req: Request, res: Response): void => {
-    try {
-        const branchId = Number(req.params.branchId);
-        const employees = employeeService.getEmployeesByBranch(branchId);
-        res.status(200).json({ message: "Employees by branch", data: employees });
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving employees by branch" });
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

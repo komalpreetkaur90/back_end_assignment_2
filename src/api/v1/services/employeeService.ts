@@ -1,49 +1,30 @@
-import { employees } from "../../../data/employees";
+import * as repository from "../repositories/repository";
+import { Employee } from "../models/employee";
 
-export const getAllEmployees = () => {
-    return [...employees];
+const COLLECTION = "employees";
+
+export const getAllEmployees = async (): Promise<Employee[]> => {
+  return await repository.getDocuments<Employee>(COLLECTION);
 };
 
-export const getEmployeeById = (id: number) => {
-    return employees.find(emp => emp.id === id);
+export const getEmployeeById = async (id: string): Promise<Employee | null> => {
+  return await repository.getDocumentById<Employee>(COLLECTION, id);
 };
 
-export const createEmployee = (employeeData: any) => {
-    const newId = Math.max(...employees.map(emp => emp.id), 0) + 1;
-    const newEmployee = {
-        id: newId,
-        ...employeeData
-    };
-    employees.push(newEmployee);
-    return { ...newEmployee };
+export const createEmployee = async (employee: Employee) => {
+  try {
+    const plainEmployee = { ...employee };
+    return await repository.addDocument<Employee>("employees", plainEmployee);
+  } catch (err) {
+    console.error("Error creating employee:", err);
+    throw err;
+  }
 };
 
-export const updateEmployee = (id: number, updateData: any) => {
-    const index = employees.findIndex(emp => emp.id === id);
-    
-    if (index === -1) {
-        return undefined;
-    }
-
-    employees[index] = {
-        ...employees[index],
-        ...updateData
-    };
-
-    return { ...employees[index] };
+export const updateEmployee = async (id: string, employee: Partial<Employee>): Promise<void> => {
+  await repository.updateDocument<Employee>(COLLECTION, id, employee);
 };
 
-export const deleteEmployee = (id: number) => {
-    const index = employees.findIndex(emp => emp.id === id);
-    
-    if (index === -1) {
-        return false;
-    }
-
-    employees.splice(index, 1);
-    return true;
-};
-
-export const getEmployeesByBranch = (branchId: number) => {
-    return employees.filter(emp => emp.branchId === branchId);
+export const deleteEmployee = async (id: string): Promise<void> => {
+  await repository.deleteDocument(COLLECTION, id);
 };

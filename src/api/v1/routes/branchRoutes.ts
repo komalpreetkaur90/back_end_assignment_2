@@ -6,13 +6,15 @@ import {
     updateBranch,
     deleteBranch
 } from "../controllers/branchController";
+import { validateRequest } from "../middleware/validateRequest";
+import { branchSchema, updateBranchSchema } from "../validation/branchValidation";
 
 const router: Router = express.Router();
 
-router.get("/branches", getAllBranches);
-router.get("/branches/:id", getBranchById);
-router.post("/branches", createBranch);
-router.put("/branches/:id", updateBranch);
-router.delete("/branches/:id", deleteBranch);
+router.get("/", getAllBranches);
+router.get("/:id", getBranchById);
+router.post("/", validateRequest(branchSchema), createBranch);
+router.put("/:id", validateRequest(updateBranchSchema), updateBranch);
+router.delete("/:id", deleteBranch);
 
 export default router;
