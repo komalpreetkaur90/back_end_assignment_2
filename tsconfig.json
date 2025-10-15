@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES6", // Specifies the target JavaScript version.
+        "target": "ES2020", // Specifies the target JavaScript version.
         "rootDir": "./src",
         "module": "commonjs", // Specifies the module system to use.
         "strict": true, // Enable all strict type-checking options.
