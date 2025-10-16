@@ -5,6 +5,8 @@ import {
     createEmployee,
     updateEmployee,
     deleteEmployee,
+    getEmployeesByBranch,
+    getEmployeesByDepartment,
 } from "../controllers/employeeController";
 import { validateRequest } from "../middleware/validateRequest";
 import { employeeSchema, updateEmployeeSchema } from "../validation/employeeValidation";
@@ -16,6 +18,9 @@ router.get("/:id", getEmployeeById);
 router.post("/", validateRequest(employeeSchema), createEmployee);
 router.put("/:id", validateRequest(updateEmployeeSchema), updateEmployee);
 router.delete("/:id", deleteEmployee);
+
+router.get("/branch/:branchId", getEmployeesByBranch);
+router.get("/department/:department", getEmployeesByDepartment);
 
 
 export default router;

@@ -28,3 +28,21 @@ export const updateEmployee = async (id: string, employee: Partial<Employee>): P
 export const deleteEmployee = async (id: string): Promise<void> => {
   await repository.deleteDocument(COLLECTION, id);
 };
+
+export const getEmployeesByBranch = async (branchId: string): Promise<Employee[]> => {
+  try {
+    return await repository.queryDocuments<Employee>(COLLECTION, "branchId", branchId);
+  } catch (err) {
+    console.error("Error fetching employees by branch:", err);
+    throw err;
+  }
+};
+
+export const getEmployeesByDepartment = async (department: string): Promise<Employee[]> => {
+  try {
+    return await repository.queryDocuments<Employee>(COLLECTION, "department", department);
+  } catch (err) {
+    console.error("Error fetching employees by department:", err);
+    throw err;
+  }
+};

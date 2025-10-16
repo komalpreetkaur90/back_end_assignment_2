@@ -23,3 +23,12 @@ export const updateDocument = async <T>(collectionName: string, id: string, data
 export const deleteDocument = async (collectionName: string, id: string): Promise<void> => {
   await db.collection(collectionName).doc(id).delete();
 };
+
+export const queryDocuments = async <T>(
+  collectionName: string,
+  field: string,
+  value: any
+): Promise<T[]> => {
+  const snapshot = await db.collection(collectionName).where(field, "==", value).get();
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as T));
+};
