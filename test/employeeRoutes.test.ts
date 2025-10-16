@@ -17,7 +17,7 @@ describe("Employee API Endpoints", () => {
             .send(newEmployee);
 
         expect(response.status).toBe(201);
-        expect(response.body.message).toBe("Employee created");
+        expect(response.body.message).toBe("Employee created successfully");
     });
 
     it("should return all employees", async () => {

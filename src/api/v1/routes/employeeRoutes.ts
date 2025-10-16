@@ -5,16 +5,22 @@ import {
     createEmployee,
     updateEmployee,
     deleteEmployee,
-    getEmployeesByBranch
+    getEmployeesByBranch,
+    getEmployeesByDepartment,
 } from "../controllers/employeeController";
+import { validateRequest } from "../middleware/validateRequest";
+import { employeeSchema, updateEmployeeSchema } from "../validation/employeeValidation";
 
 const router: Router = express.Router();
 
-router.get("/employees", getAllEmployees);
-router.get("/employees/:id", getEmployeeById);
-router.post("/employees", createEmployee);
-router.put("/employees/:id", updateEmployee);
-router.delete("/employees/:id", deleteEmployee);
-router.get("/branches/:branchId/employees", getEmployeesByBranch);
+router.get("/", getAllEmployees);
+router.get("/:id", getEmployeeById);
+router.post("/", validateRequest(employeeSchema), createEmployee);
+router.put("/:id", validateRequest(updateEmployeeSchema), updateEmployee);
+router.delete("/:id", deleteEmployee);
+
+router.get("/branch/:branchId", getEmployeesByBranch);
+router.get("/department/:department", getEmployeesByDepartment);
+
 
 export default router;

@@ -6,7 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "npx ts-node src/app.ts",
+    "dev": "npx ts-node src/app.ts",
     "test": "jest"
   },
   "repository": {
@@ -36,6 +37,8 @@
   "dependencies": {
     "@types/express": "^5.0.3",
     "express": "^5.1.0",
+    "firebase-admin": "^13.5.0",
+    "joi": "^18.0.1",
     "morgan": "^1.10.1"
   }
 }
