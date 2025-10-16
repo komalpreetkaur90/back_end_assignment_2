@@ -85,3 +85,4 @@ export const deleteEmployee = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: err.message } as ErrorResponse);
   }
 };
+
