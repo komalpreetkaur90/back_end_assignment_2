@@ -38,12 +38,15 @@ export const getEmployeeById = async (req: Request, res: Response): Promise<void
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
-    const employeeData = JSON.parse(JSON.stringify(req.body));
+    const { name, position, department, email, phone, branchId } = req.body;
 
+    if (!name || !position || !department || !email || !phone || !branchId) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const employeeData = { name, position, department, email, phone, branchId };
     const newEmployee = await employeeService.createEmployee(employeeData);
-    res.status(201).json({
-      message: "Employee created successfully",
-      data: newEmployee,
+    res.status(201).json({message: "Employee created successfully", data: newEmployee,
     });
   } catch (err: any) {
     console.error("Error in createEmployee controller:", err);
@@ -90,6 +93,10 @@ export const getEmployeesByBranch = async (req: Request, res: Response) => {
   try {
     const branchId = req.params.branchId;
     const employees = await employeeService.getEmployeesByBranch(branchId);
+    const response: SuccessResponse<Employee[]> = {
+      message: "Employees fetched by branch",
+      data: employees,
+    };
     res.status(200).json(employees);
   } catch (error) {
     console.error("Error fetching employees by branch:", error);
@@ -101,6 +108,10 @@ export const getEmployeesByDepartment = async (req: Request, res: Response) => {
   try {
     const department = req.params.department;
     const employees = await employeeService.getEmployeesByDepartment(department);
+    const response: SuccessResponse<Employee[]> = {
+      message: "Employees fetched by department",
+      data: employees,
+    };
     res.status(200).json(employees);
   } catch (error) {
     console.error("Error fetching employees by department:", error);

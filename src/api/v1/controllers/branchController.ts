@@ -41,6 +41,13 @@ export const getBranchById = async (req: Request, res: Response): Promise<void> 
 
 export const createBranch = async (req: Request, res: Response): Promise<void> => {
   try {
+    const { name, address, phone } = req.body;
+
+    if (!name || !address || !phone) {
+      res.status(400).json({ message: "All fields are required" });
+      return;
+    }
+
     const newBranch = await branchService.createBranch(req.body);
     const response: SuccessResponse<Branch> = {
       message: "Branch created",
