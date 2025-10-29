@@ -6,8 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "start": "npx ts-node src/app.ts",
-    "dev": "npx ts-node src/app.ts",
+    "start": "npx ts-node src/server.ts",
+    "dev": "npx ts-node src/server.ts",
     "test": "jest"
   },
   "repository": {

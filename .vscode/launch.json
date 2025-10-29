@@ -1,43 +1,25 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/app.js",
-      "request": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "node"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug Server (TypeScript)",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "-r",
-        "ts-node/register"
-      ],
-      "args": ["${workspaceFolder}/src/server.ts"],
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "cwd": "${workspaceFolder}",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
-      "console": "internalConsole",
-      "internalConsoleOptions": "neverOpen",
-      "sourceMaps": true,
-      "outFiles": ["${workspaceFolder}/src/**/*.ts"],
-      "stopOnEntry": false
-      
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Server",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "program": "${workspaceFolder}/src/server.ts",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Jest Tests",
+            "runtimeExecutable": "node",
+            "args": [
+                "${workspaceFolder}/node_modules/jest/bin/jest.js",
+                "--runInBand"
+            ],
+            "console": "integratedTerminal",
+            "runtimeArgs": ["-r", "ts-node/register"]
+        }
+    ]
 }
-
-
-
-
