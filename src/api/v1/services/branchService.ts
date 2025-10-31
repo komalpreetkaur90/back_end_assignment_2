@@ -1,24 +1,45 @@
-import { Branch } from "../models/branch";
-import * as repository from "../repositories/repository";
+import { branches } from "../../../data/branches";
 
-const COLLECTION = "branches";
-
-export const getAllBranches = async (): Promise<Branch[]> => {
-  return await repository.getDocuments<Branch>(COLLECTION);
+export const getAllBranches = () => {
+    return [...branches];
 };
 
-export const getBranchById = async (id: string): Promise<Branch | null> => {
-  return await repository.getDocumentById<Branch>(COLLECTION, id);
+export const getBranchById = (id: number) => {
+    return branches.find(branch => branch.id === id);
 };
 
-export const createBranch = async (branch: Branch): Promise<Branch & { id: string }> => {
-  return await repository.addDocument<Branch>(COLLECTION, branch);
+export const createBranch = (branchData: any) => {
+    const newId = Math.max(...branches.map(branch => branch.id), 0) + 1;
+    const newBranch = {
+        id: branches.length + 1,
+        ...branchData
+    };
+    branches.push(newBranch);
+    return { ...newBranch };
 };
 
-export const updateBranch = async (id: string, branch: Partial<Branch>): Promise<void> => {
-  await repository.updateDocument<Branch>(COLLECTION, id, branch);
+export const updateBranch = (id: number, updateData: any) => {
+    const index = branches.findIndex(branch => branch.id === id);
+    
+    if (index === -1) {
+        return undefined;
+    }
+
+    branches[index] = {
+        ...branches[index],
+        ...updateData
+    };
+
+    return { ...branches[index] };
 };
 
-export const deleteBranch = async (id: string): Promise<void> => {
-  await repository.deleteDocument(COLLECTION, id);
+export const deleteBranch = (id: number) => {
+    const index = branches.findIndex(branch => branch.id === id);
+    
+    if (index === -1) {
+        return false;
+    }
+
+    branches.splice(index, 1);
+    return true;
 };
