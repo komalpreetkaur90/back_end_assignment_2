@@ -1,5 +1,10 @@
 import express, { Express } from "express";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import dotenv from "dotenv";
+import { generateSwaggerSpec } from "./config/swaggerOptions";
+
+dotenv.config();
 
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
@@ -11,6 +16,8 @@ const app: Express = express();
 app.use(express.json());
 app.use(morgan("combined"));
 
+const swaggerSpec = generateSwaggerSpec();
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Health check route
 app.get("/health", (req, res) => {
