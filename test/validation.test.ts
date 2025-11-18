@@ -17,7 +17,9 @@ describe("Employee Validation Schema", () => {
     const { error } = employeeSchema.validate({
       name: "John Doe",
       position: "Developer",
+      department: "IT",
       email: "john@example.com",
+      phone: "555-1234",
       branchId: 1
     });
     expect(error).toBeUndefined();
