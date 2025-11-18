@@ -1,163 +1,60 @@
+import Joi from "joi";
 import express, { Router } from "express";
-import {
-    getAllBranches,
-    getBranchById,
-    createBranch,
-    updateBranch,
-    deleteBranch
-} from "../controllers/branchController";
-import { validateRequest } from "../middleware/validateRequest";
-import { branchSchema, updateBranchSchema } from "../validation/branchValidation";
-
 const router: Router = express.Router();
 
 /**
+ * Branch schema for OpenAPI
+ *
  * @openapi
- * /branches:
- *   get:
- *     summary: Retrieve a list of all branches
- *     tags: [Branches]
- *     responses:
- *       200:
- *         description: List of branches retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Branches retrieved successfully"
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Branch'
+ * Branch:
+ *   type: object
+ *   required:
+ *     - name
+ *     - address
+ *   properties:
+ *     id:
+ *       type: string
+ *       description: Unique ID of the branch
+ *     name:
+ *       type: string
+ *       description: Name of the branch
+ *       example: "Downtown Branch"
+ *     address:
+ *       type: string
+ *       description: Physical address
+ *       example: "123 Main St"
+ *     phone:
+ *       type: string
+ *       description: Contact phone number
+ *       example: "555-1234"
  */
-router.get("/", getAllBranches);
+export const branchSchema = Joi.object({
+  name: Joi.string().min(2).max(100).required(),
+  address: Joi.string().min(5).max(255).required(),
+  phone: Joi.string(),
+});
 
 /**
+ * Branch update schema for OpenAPI
+ *
  * @openapi
- * /branches/{id}:
- *   get:
- *     summary: Retrieve a single branch by ID
- *     tags: [Branches]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the branch
- *     responses:
- *       200:
- *         description: Branch retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Branch retrieved successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Branch'
- *       404:
- *         description: Branch not found
+ * BranchUpdate:
+ *   type: object
+ *   properties:
+ *     name:
+ *       type: string
+ *       description: Name of the branch
+ *     address:
+ *       type: string
+ *       description: Physical address
+ *     phone:
+ *       type: string
+ *       description: Contact phone number
  */
-router.get("/:id", getBranchById);
-
-/**
- * @openapi
- * /branches:
- *   post:
- *     summary: Create a new branch
- *     tags: [Branches]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Branch'
- *     responses:
- *       201:
- *         description: Branch created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Branch created successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Branch'
- */
-router.post("/", validateRequest(branchSchema), createBranch);
-
-/**
- * @openapi
- * /branches/{id}:
- *   put:
- *     summary: Update an existing branch
- *     tags: [Branches]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the branch to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/BranchUpdate'
- *     responses:
- *       200:
- *         description: Branch updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Branch updated successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Branch'
- *       404:
- *         description: Branch not found
- */
-router.put("/:id", validateRequest(updateBranchSchema), updateBranch);
-
-/**
- * @openapi
- * /branches/{id}:
- *   delete:
- *     summary: Delete a branch by ID
- *     tags: [Branches]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the branch to delete
- *     responses:
- *       200:
- *         description: Branch deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Branch deleted successfully"
- *       404:
- *         description: Branch not found
- */
-router.delete("/:id", deleteBranch);
+export const updateBranchSchema = Joi.object({
+  name: Joi.string().min(2).max(100),
+  address: Joi.string().min(5).max(255),
+  phone: Joi.string(),
+});
 
 export default router;

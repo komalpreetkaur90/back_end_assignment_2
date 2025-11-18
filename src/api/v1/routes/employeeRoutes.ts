@@ -1,227 +1,67 @@
+import Joi from "joi";
 import express, { Router } from "express";
-import {
-    getAllEmployees,
-    getEmployeeById,
-    createEmployee,
-    updateEmployee,
-    deleteEmployee,
-    getEmployeesByBranch,
-    getEmployeesByDepartment,
-} from "../controllers/employeeController";
-import { validateRequest } from "../middleware/validateRequest";
-import { employeeSchema, updateEmployeeSchema } from "../validation/employeeValidation";
-
 const router: Router = express.Router();
 
 /**
+ * Employee schema for OpenAPI
+ *
  * @openapi
- * /employees:
- *   get:
- *     summary: Retrieve a list of all employees
- *     tags: [Employees]
- *     responses:
- *       200:
- *         description: List of employees retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employees retrieved successfully"
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Employee'
+ * Employee:
+ *   type: object
+ *   required:
+ *     - name
+ *     - position
+ *     - email
+ *     - branchId
+ *   properties:
+ *     id:
+ *       type: string
+ *       description: Unique ID of the employee
+ *     name:
+ *       type: string
+ *       minLength: 2
+ *       maxLength: 100
+ *       example: "John Doe"
+ *     position:
+ *       type: string
+ *       example: "Manager"
+ *     email:
+ *       type: string
+ *       format: email
+ *       example: "john@example.com"
+ *     branchId:
+ *       type: integer
+ *       example: 1
  */
-router.get("/", getAllEmployees);
+export const employeeSchema = Joi.object({
+  name: Joi.string().min(2).max(100).required(),
+  position: Joi.string().min(2).max(100).required(),
+  email: Joi.string().email().required(),
+  branchId: Joi.number().required(),
+}).unknown(true);
 
 /**
+ * Employee update schema for OpenAPI
+ *
  * @openapi
- * /employees/{id}:
- *   get:
- *     summary: Retrieve a single employee by ID
- *     tags: [Employees]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the employee
- *     responses:
- *       200:
- *         description: Employee retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employee retrieved successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Employee'
- *       404:
- *         description: Employee not found
+ * EmployeeUpdate:
+ *   type: object
+ *   properties:
+ *     name:
+ *       type: string
+ *     position:
+ *       type: string
+ *     email:
+ *       type: string
+ *       format: email
+ *     branchId:
+ *       type: integer
  */
-router.get("/:id", getEmployeeById);
-
-/**
- * @openapi
- * /employees:
- *   post:
- *     summary: Create a new employee
- *     tags: [Employees]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Employee'
- *     responses:
- *       201:
- *         description: Employee created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employee created successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Employee'
- */
-router.post("/", validateRequest(employeeSchema), createEmployee);
-
-/**
- * @openapi
- * /employees/{id}:
- *   put:
- *     summary: Update an existing employee
- *     tags: [Employees]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the employee to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/EmployeeUpdate'
- *     responses:
- *       200:
- *         description: Employee updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employee updated successfully"
- *                 data:
- *                   $ref: '#/components/schemas/Employee'
- *       404:
- *         description: Employee not found
- */
-router.put("/:id", validateRequest(updateEmployeeSchema), updateEmployee);
-
-/**
- * @openapi
- * /employees/{id}:
- *   delete:
- *     summary: Delete an employee by ID
- *     tags: [Employees]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Unique ID of the employee to delete
- *     responses:
- *       200:
- *         description: Employee deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employee deleted successfully"
- *       404:
- *         description: Employee not found
- */
-router.delete("/:id", deleteEmployee);
-
-/**
- * @openapi
- * /employees/branch/{branchId}:
- *   get:
- *     summary: Retrieve employees by branch ID
- *     tags: [Employees]
- *     parameters:
- *       - in: path
- *         name: branchId
- *         required: true
- *         schema:
- *           type: integer
- *         description: Branch ID to filter employees
- *     responses:
- *       200:
- *         description: Employees retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employees retrieved successfully"
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Employee'
- */
-router.get("/branch/:branchId", getEmployeesByBranch);
-
-/**
- * @openapi
- * /employees/department/{department}:
- *   get:
- *     summary: Retrieve employees by department name
- *     tags: [Employees]
- *     parameters:
- *       - in: path
- *         name: department
- *         required: true
- *         schema:
- *           type: string
- *         description: Department name to filter employees
- *     responses:
- *       200:
- *         description: Employees retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Employees retrieved successfully"
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Employee'
- */
-router.get("/department/:department", getEmployeesByDepartment);
+export const updateEmployeeSchema = Joi.object({
+  name: Joi.string().min(2).max(100),
+  position: Joi.string().min(2).max(100),
+  email: Joi.string().email(),
+  branchId: Joi.number(),
+}).unknown(true);
 
 export default router;
