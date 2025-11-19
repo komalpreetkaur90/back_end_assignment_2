@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API Documentation",
+    "title": "Task Management API Documentation",
     "version": "1.0.0",
-    "description": "API Documentation for Assignment 5."
+    "description": "This is the API documentation for the Task Management application."
   },
   "servers": [
     {
@@ -20,33 +20,81 @@
       }
     },
     "schemas": {
-      "Branch": {
+      "Employee": {
         "type": "object",
-        "required": [
-          "name",
-          "address"
-        ],
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique ID of the branch"
+            "description": "Unique ID of the employee"
           },
           "name": {
             "type": "string",
-            "description": "Name of the branch",
-            "example": "Downtown Branch"
+            "minLength": 2,
+            "maxLength": 100,
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john@example.com"
+          },
+          "position": {
+            "type": "string",
+            "example": "Manager"
+          },
+          "branchId": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "name",
+          "position",
+          "email",
+          "branchId"
+        ]
+      },
+      "EmployeeUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "position": {
+            "type": "string"
+          },
+          "branchId": {
+            "type": "integer"
+          }
+        }
+      },
+      "Branch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the branch"
           },
           "address": {
             "type": "string",
-            "description": "Physical address of the branch",
-            "example": "123 Main St"
+            "description": "Physical address of the branch"
           },
           "phone": {
             "type": "string",
-            "description": "Contact phone number of the branch",
-            "example": "555-1234"
+            "description": "Contact phone number of the branch"
           }
-        }
+        },
+        "required": [
+          "name",
+          "address"
+        ]
       },
       "BranchUpdate": {
         "type": "object",
@@ -64,61 +112,6 @@
             "description": "Contact phone number of the branch"
           }
         }
-      },
-      "Employee": {
-        "type": "object",
-        "required": [
-          "name",
-          "position",
-          "email",
-          "branchId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique ID of the employee"
-          },
-          "name": {
-            "type": "string",
-            "description": "Full name of the employee",
-            "minLength": 2,
-            "maxLength": 100,
-            "example": "John Doe"
-          },
-          "position": {
-            "type": "string",
-            "description": "Job title of the employee",
-            "example": "Manager"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "john@example.com"
-          },
-          "branchId": {
-            "type": "integer",
-            "description": "ID of the branch the employee belongs to",
-            "example": 1
-          }
-        }
-      },
-      "EmployeeUpdate": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "position": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "branchId": {
-            "type": "integer"
-          }
-        }
       }
     }
   },
@@ -127,6 +120,132 @@
       "bearerAuth": []
     }
   ],
-  "paths": {},
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get all employees",
+        "tags": [
+          "Employees"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Employee"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new employee",
+        "tags": [
+          "Employees"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Employee"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "summary": "Get employee by ID",
+        "tags": [
+          "Employees"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employee"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update employee",
+        "tags": [
+          "Employees"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete employee",
+        "tags": [
+          "Employees"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          }
+        }
+      }
+    }
+  },
   "tags": []
 }
