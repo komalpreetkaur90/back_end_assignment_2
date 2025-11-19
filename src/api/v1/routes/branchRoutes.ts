@@ -33,7 +33,7 @@ router.get("/", getAllBranches);
  * @openapi
  * /{id}:
  *   get:
- *     summary: Get a branch by ID
+ *     summary: Get branch by ID
  *     tags: [Branches]
  *     parameters:
  *       - in: path
@@ -73,7 +73,7 @@ router.post("/", validateRequest(branchSchema), createBranch);
  * @openapi
  * /{id}:
  *   put:
- *     summary: Update an existing branch
+ *     summary: Update branch
  *     tags: [Branches]
  *     parameters:
  *       - in: path
@@ -96,7 +96,7 @@ router.put("/:id", validateRequest(updateBranchSchema), updateBranch);
  * @openapi
  * /{id}:
  *   delete:
- *     summary: Delete a branch
+ *     summary: Delete branch
  *     tags: [Branches]
  *     parameters:
  *       - in: path
