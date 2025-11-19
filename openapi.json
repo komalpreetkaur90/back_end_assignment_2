@@ -27,17 +27,24 @@
           "address"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique ID of the branch"
+          },
           "name": {
             "type": "string",
-            "description": "Name of the branch"
+            "description": "Name of the branch",
+            "example": "Downtown Branch"
           },
           "address": {
             "type": "string",
-            "description": "Physical address of the branch"
+            "description": "Physical address of the branch",
+            "example": "123 Main St"
           },
           "phone": {
             "type": "string",
-            "description": "Contact phone number of the branch"
+            "description": "Contact phone number of the branch",
+            "example": "555-1234"
           }
         }
       },
@@ -73,12 +80,14 @@
           },
           "name": {
             "type": "string",
+            "description": "Full name of the employee",
             "minLength": 2,
             "maxLength": 100,
             "example": "John Doe"
           },
           "position": {
             "type": "string",
+            "description": "Job title of the employee",
             "example": "Manager"
           },
           "email": {
@@ -88,6 +97,7 @@
           },
           "branchId": {
             "type": "integer",
+            "description": "ID of the branch the employee belongs to",
             "example": 1
           }
         }
@@ -117,104 +127,6 @@
       "bearerAuth": []
     }
   ],
-  "paths": {
-    "Branch": {
-      "type": "object",
-      "required": [
-        "name",
-        "address"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique ID of the branch"
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the branch",
-          "example": "Downtown Branch"
-        },
-        "address": {
-          "type": "string",
-          "description": "Physical address",
-          "example": "123 Main St"
-        },
-        "phone": {
-          "type": "string",
-          "description": "Contact phone number",
-          "example": "555-1234"
-        }
-      }
-    },
-    "BranchUpdate": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the branch"
-        },
-        "address": {
-          "type": "string",
-          "description": "Physical address"
-        },
-        "phone": {
-          "type": "string",
-          "description": "Contact phone number"
-        }
-      }
-    },
-    "Employee": {
-      "type": "object",
-      "required": [
-        "name",
-        "position",
-        "email",
-        "branchId"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique ID of the employee"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 100,
-          "example": "John Doe"
-        },
-        "position": {
-          "type": "string",
-          "example": "Manager"
-        },
-        "email": {
-          "type": "string",
-          "format": "email",
-          "example": "john@example.com"
-        },
-        "branchId": {
-          "type": "integer",
-          "example": 1
-        }
-      }
-    },
-    "EmployeeUpdate": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "position": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "branchId": {
-          "type": "integer"
-        }
-      }
-    }
-  },
+  "paths": {},
   "tags": []
 }
