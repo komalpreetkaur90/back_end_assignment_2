@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Task Management API Documentation",
+    "title": "API Documentation",
     "version": "1.0.0",
-    "description": "This is the API documentation for the Task Management application."
+    "description": "API Documentation for Assignment 5."
   },
   "servers": [
     {
@@ -17,6 +17,98 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Branch": {
+        "type": "object",
+        "required": [
+          "name",
+          "address"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the branch"
+          },
+          "address": {
+            "type": "string",
+            "description": "Physical address of the branch"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number of the branch"
+          }
+        }
+      },
+      "BranchUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the branch"
+          },
+          "address": {
+            "type": "string",
+            "description": "Physical address of the branch"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number of the branch"
+          }
+        }
+      },
+      "Employee": {
+        "type": "object",
+        "required": [
+          "name",
+          "position",
+          "email",
+          "branchId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique ID of the employee"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "example": "John Doe"
+          },
+          "position": {
+            "type": "string",
+            "example": "Manager"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john@example.com"
+          },
+          "branchId": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "EmployeeUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "branchId": {
+            "type": "integer"
+          }
+        }
       }
     }
   },
