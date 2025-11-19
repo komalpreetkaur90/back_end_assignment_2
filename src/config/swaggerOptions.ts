@@ -4,10 +4,10 @@ const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "API Documentation",
+            title: "Task Management API Documentation",
             version: "1.0.0",
             description:
-                "API Documentation for Assignment 5.",
+                "This is the API documentation for the Task Management application.",
         },
         servers: [
             {

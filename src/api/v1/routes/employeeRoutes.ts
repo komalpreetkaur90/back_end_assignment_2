@@ -1,66 +1,113 @@
-import Joi from "joi";
+import express, { Router } from "express";
+import {
+  getAllEmployees,
+  getEmployeeById,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+} from "../controllers/employeeController";
+import { validateRequest } from "../middleware/validateRequest";
+import { employeeSchema, updateEmployeeSchema } from "../validation/employeeValidation";
+
+const router: Router = express.Router();
 
 /**
  * @openapi
- * components:
- *   schemas:
- *     Employee:
- *       type: object
- *       required:
- *         - name
- *         - position
- *         - email
- *         - branchId
- *       properties:
- *         id:
- *           type: string
- *           description: Unique ID of the employee
- *         name:
- *           type: string
- *           description: Full name of the employee
- *           minLength: 2
- *           maxLength: 100
- *           example: "John Doe"
- *         position:
- *           type: string
- *           description: Job title of the employee
- *           example: "Manager"
- *         email:
- *           type: string
- *           format: email
- *           example: "john@example.com"
- *         branchId:
- *           type: integer
- *           description: ID of the branch the employee belongs to
- *           example: 1
+ * /:
+ *   get:
+ *     summary: Get all employees
+ *     tags: [Employees]
+ *     responses:
+ *       "200":
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/Employee"
  */
-export const employeeSchema = Joi.object({
-  name: Joi.string().min(2).max(100).required(),
-  position: Joi.string().min(2).max(100).required(),
-  email: Joi.string().email().required(),
-  branchId: Joi.number().required(),
-}).unknown(true);
+router.get("/", getAllEmployees);
 
 /**
  * @openapi
- * components:
- *   schemas:
- *     EmployeeUpdate:
- *       type: object
- *       properties:
- *         name:
+ * /{id}:
+ *   get:
+ *     summary: Get employee by ID
+ *     tags: [Employees]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
  *           type: string
- *         position:
- *           type: string
- *         email:
- *           type: string
- *           format: email
- *         branchId:
- *           type: integer
+ *     responses:
+ *       "200":
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Employee"
  */
-export const updateEmployeeSchema = Joi.object({
-  name: Joi.string().min(2).max(100),
-  position: Joi.string().min(2).max(100),
-  email: Joi.string().email(),
-  branchId: Joi.number(),
-}).unknown(true);
+router.get("/:id", getEmployeeById);
+
+/**
+ * @openapi
+ * /:
+ *   post:
+ *     summary: Create new employee
+ *     tags: [Employees]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Employee"
+ *     responses:
+ *       "201":
+ *         description: Created
+ */
+router.post("/", validateRequest(employeeSchema), createEmployee);
+
+/**
+ * @openapi
+ * /{id}:
+ *   put:
+ *     summary: Update employee
+ *     tags: [Employees]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/EmployeeUpdate"
+ *     responses:
+ *       "200":
+ *         description: Updated
+ */
+router.put("/:id", validateRequest(updateEmployeeSchema), updateEmployee);
+
+/**
+ * @openapi
+ * /{id}:
+ *   delete:
+ *     summary: Delete employee
+ *     tags: [Employees]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       "200":
+ *         description: Deleted
+ */
+router.delete("/:id", deleteEmployee);
+
+export default router;
