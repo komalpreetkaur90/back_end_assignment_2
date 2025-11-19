@@ -13,7 +13,7 @@ const router: Router = express.Router();
 
 /**
  * @openapi
- * /:
+ * /api/v1/branches:
  *   get:
  *     summary: Get all branches
  *     tags: [Branches]
@@ -31,7 +31,7 @@ router.get("/", getAllBranches);
 
 /**
  * @openapi
- * /{id}:
+ * /api/v1/branches/{id}:
  *   get:
  *     summary: Get branch by ID
  *     tags: [Branches]
@@ -53,7 +53,7 @@ router.get("/:id", getBranchById);
 
 /**
  * @openapi
- * /:
+ * /api/v1/branches:
  *   post:
  *     summary: Create a new branch
  *     tags: [Branches]
@@ -71,7 +71,7 @@ router.post("/", validateRequest(branchSchema), createBranch);
 
 /**
  * @openapi
- * /{id}:
+ * /api/v1/branches/{id}:
  *   put:
  *     summary: Update branch
  *     tags: [Branches]
@@ -94,7 +94,7 @@ router.put("/:id", validateRequest(updateBranchSchema), updateBranch);
 
 /**
  * @openapi
- * /{id}:
+ * /api/v1/branches/{id}:
  *   delete:
  *     summary: Delete branch
  *     tags: [Branches]
